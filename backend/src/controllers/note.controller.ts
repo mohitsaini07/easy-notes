@@ -31,7 +31,7 @@ export const getNotes = async (req: Request, res: Response) => {
 
     // If uploader is deleted, set default name to EasyNotes
     const processedNotes = notes.map(note => {
-      const noteObj = note.toObject();
+      const noteObj: any = note.toObject();
       if (!noteObj.uploader) {
         noteObj.uploader = {
           name: 'EasyNotes',
@@ -87,15 +87,19 @@ export const uploadNote = async (req: Request | any, res: Response) => {
 // @desc    Get single note by ID
 // @route   GET /api/notes/:id
 // @access  Public
-export const getNoteById = async (req: Request, res: Response) => {
+export const getNoteById = async (req: Request | any, res: Response) => {
   try {
     const note = await Note.findById(req.params.id).populate('uploader', 'name avatar');
     if (note) {
-      // Increment views
-      note.views = (note.views || 0) + 1;
-      await note.save();
+      // Increment views only if viewer is not the uploader
+      const isUploader = req.user && note.uploader && note.uploader._id.toString() === req.user._id.toString();
 
-      const noteObj = note.toObject();
+      if (!isUploader) {
+        note.views = (note.views || 0) + 1;
+        await note.save();
+      }
+
+      const noteObj: any = note.toObject();
       if (!noteObj.uploader) {
         noteObj.uploader = {
           name: 'EasyNotes',

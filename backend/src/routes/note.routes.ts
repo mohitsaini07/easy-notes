@@ -1,6 +1,6 @@
 import express from 'express';
 import { getNotes, uploadNote, getNoteById, getUserStats, updateDownloadCount } from '../controllers/note.controller';
-import { protect } from '../middlewares/auth.middleware';
+import { protect, optionalProtect } from '../middlewares/auth.middleware';
 import upload from '../middlewares/upload.middleware';
 
 const router = express.Router();
@@ -13,6 +13,6 @@ router.route('/')
   .post(protect, upload.single('file'), uploadNote);
 
 router.route('/:id')
-  .get(getNoteById);
+  .get(optionalProtect, getNoteById);
 
 export default router;
