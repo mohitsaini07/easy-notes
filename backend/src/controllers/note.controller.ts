@@ -57,9 +57,7 @@ export const uploadNote = async (req: Request | any, res: Response) => {
     
     let fileUrl = '';
     if (req.file) {
-      // In production, upload to Cloudinary/S3 here
-      // For local, we store the static path
-      fileUrl = `/uploads/${req.file.filename}`;
+      fileUrl = req.file.path;
     } else {
       return res.status(400).json({ message: 'No file uploaded' });
     }

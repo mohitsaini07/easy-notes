@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { FileText, Eye, Star, Download, Upload, Plus, ChevronRight, Search, Filter, Users } from 'lucide-react';
+import { FileText, Eye, Star, Download, Upload, Plus, ChevronRight, Search, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
+import axios, { getFileUrl } from '../api/axios';
 import { PreviewModal } from '../components/PreviewModal';
 
 interface Stats {
@@ -27,10 +27,7 @@ export const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const config = {
-          headers: { Authorization: `Bearer ${user?.token}` }
-        };
-        const { data } = await axios.get('http://localhost:5000/api/notes/stats', config);
+        const { data } = await axios.get('/api/notes/stats');
         setStats(data);
       } catch (error) {
         console.error(error);
@@ -44,7 +41,7 @@ export const Dashboard = () => {
 
   const handleDownload = async (note: any) => {
     try {
-      const response = await fetch(`http://localhost:5000${note.fileUrl}`);
+      const response = await fetch(getFileUrl(note.fileUrl));
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -55,11 +52,10 @@ export const Dashboard = () => {
       link.remove();
       
       // Update download count on server
-      await axios.put(`http://localhost:5000/api/notes/${note._id}/download`);
+      await axios.put(`/api/notes/${note._id}/download`);
       
       // Refresh stats to show updated count
-      const config = { headers: { Authorization: `Bearer ${user?.token}` } };
-      const { data } = await axios.get('http://localhost:5000/api/notes/stats', config);
+      const { data } = await axios.get('/api/notes/stats');
       setStats(data);
     } catch (error) {
       console.error('Download failed:', error);
@@ -70,7 +66,7 @@ export const Dashboard = () => {
     setSelectedNote(note);
     setIsPreviewOpen(true);
     // Increment view count locally via API
-    axios.get(`http://localhost:5000/api/notes/${note._id}`);
+    axios.get(`/api/notes/${note._id}`);
   };
 
   const filteredNotes = stats?.recentNotes?.filter(n => 
@@ -228,7 +224,7 @@ export const Dashboard = () => {
           {/* Sidebar */}
           <div className="space-y-8">
             {/* Profile Card */}
-            <div className="premium-card p-8 rounded-[2.5rem] bg-gradient-to-br from-primary to-primary/80 text-primary-foreground relative overflow-hidden">
+            <div className="premium-card p-8 rounded-[2.5rem] bg-linear-to-br from-primary to-primary/80 text-primary-foreground relative overflow-hidden">
                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
                <div className="relative z-10">
                  <div className="h-20 w-20 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center text-4xl font-black mb-6 border border-white/20">

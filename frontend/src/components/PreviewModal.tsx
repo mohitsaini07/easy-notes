@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, ExternalLink, FileText } from 'lucide-react';
+import { getFileUrl } from '../api/axios';
 
 interface PreviewModalProps {
   isOpen: boolean;
@@ -11,7 +12,7 @@ interface PreviewModalProps {
 export const PreviewModal = ({ isOpen, onClose, note, onDownload }: PreviewModalProps) => {
   if (!note) return null;
 
-  const fileUrl = `http://localhost:5000${note.fileUrl}`;
+  const fileUrl = getFileUrl(note.fileUrl);
   const isPDF = note.fileUrl.toLowerCase().endsWith('.pdf');
   const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(note.fileUrl);
 

@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api/axios';
 import { Upload, X, Globe, Lock, FileText, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
-import { useAuthStore } from '../store/auth';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export const UploadNote = () => {
   const [title, setTitle] = useState('');
@@ -16,7 +15,6 @@ export const UploadNote = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   
-  const user = useAuthStore((state) => state.user);
   const navigate = useNavigate();
 
   const submitHandler = async (e: React.FormEvent) => {
@@ -39,11 +37,10 @@ export const UploadNote = () => {
       setError('');
       const config = { 
         headers: { 
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${user?.token}`
+          'Content-Type': 'multipart/form-data'
         } 
       };
-      await axios.post('http://localhost:5000/api/notes', formData, config);
+      await axios.post('/api/notes', formData, config);
       setSuccess(true);
       setTimeout(() => navigate('/dashboard'), 1500);
     } catch (err: any) {
@@ -81,7 +78,7 @@ export const UploadNote = () => {
   return (
     <div className="min-h-screen pt-32 pb-20 bg-secondary/30 relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-1/2 bg-[radial-gradient(circle_at_50%_0%,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"></div>
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-[radial-gradient(circle_at_50%_0%,var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"></div>
 
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-12 gap-6">
@@ -184,7 +181,7 @@ export const UploadNote = () => {
                      htmlFor="file" 
                      className={`cursor-pointer group flex flex-col items-center justify-center gap-6 border-2 border-dashed rounded-[2.5rem] p-12 transition-all ${file ? 'border-primary bg-primary/5' : 'border-border hover:bg-secondary/50 hover:border-primary/50'}`}
                    >
-                     <div className={`h-20 w-20 rounded-[1.5rem] flex items-center justify-center transition-all ${file ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' : 'bg-muted text-muted-foreground group-hover:scale-110 group-hover:bg-primary/10 group-hover:text-primary'}`}>
+                     <div className={`h-20 w-20 rounded-3xl flex items-center justify-center transition-all ${file ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' : 'bg-muted text-muted-foreground group-hover:scale-110 group-hover:bg-primary/10 group-hover:text-primary'}`}>
                         {file ? <CheckCircle2 className="h-10 w-10" /> : <Upload className="h-10 w-10" />}
                      </div>
                      <div className="text-center">
@@ -238,7 +235,7 @@ export const UploadNote = () => {
                  <button 
                    type="submit" 
                    disabled={loading} 
-                   className="w-full bg-primary text-primary-foreground py-6 rounded-[2rem] font-black text-xl hover:bg-primary/90 transition-all shadow-2xl shadow-primary/30 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
+                   className="w-full bg-primary text-primary-foreground py-6 rounded-4xl font-black text-xl hover:bg-primary/90 transition-all shadow-2xl shadow-primary/30 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden"
                  >
                    <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                    {loading ? (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Search, Filter, Download, User, Eye, ArrowUpDown, Sparkles, BookOpen } from 'lucide-react';
+import axios, { getFileUrl } from '../api/axios';
+import { Search, Download, Eye, ArrowUpDown, Sparkles, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PreviewModal } from '../components/PreviewModal';
 
@@ -31,7 +31,7 @@ export const Explore = () => {
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`http://localhost:5000/api/notes?keyword=${keyword}&sort=${sort}`);
+      const { data } = await axios.get(`/api/notes?keyword=${keyword}&sort=${sort}`);
       setNotes(data);
     } catch (error) {
       console.error(error);
@@ -47,7 +47,7 @@ export const Explore = () => {
 
   const handleDownload = async (note: Note) => {
     try {
-      const response = await fetch(`http://localhost:5000${note.fileUrl}`);
+      const response = await fetch(getFileUrl(note.fileUrl));
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -58,7 +58,7 @@ export const Explore = () => {
       link.remove();
       
       // Update download count on server
-      await axios.put(`http://localhost:5000/api/notes/${note._id}/download`);
+      await axios.put(`/api/notes/${note._id}/download`);
       
       // Update local state for immediate feedback
       setNotes(prev => prev.map(n => n._id === note._id ? {...n, downloads: (n.downloads || 0) + 1} : n));
@@ -73,7 +73,7 @@ export const Explore = () => {
     // Increment view count locally (it happens on backend too when fetching by ID, but Explore uses bulk fetch)
     // Actually, our backend increments views only in getNoteById. 
     // To be accurate, we should hit the backend when previewing.
-    axios.get(`http://localhost:5000/api/notes/${note._id}`);
+    axios.get(`/api/notes/${note._id}`);
   };
 
   return (
@@ -164,7 +164,7 @@ export const Explore = () => {
                   className="premium-card group rounded-[2.5rem] overflow-hidden flex flex-col h-full bg-card cursor-pointer"
                   onClick={() => handlePreview(note)}
                 >
-                  <div className="h-48 relative overflow-hidden flex items-center justify-center bg-gradient-to-br from-primary/10 to-secondary p-8">
+                  <div className="h-48 relative overflow-hidden flex items-center justify-center bg-linear-to-br from-primary/10 to-secondary p-8">
                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
                      <BookOpen className="h-20 w-20 text-primary/20 group-hover:scale-125 transition-transform duration-500 group-hover:rotate-6" />
                      <div className="absolute bottom-4 left-4 right-4">

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api/axios';
 import { useAuthStore } from '../store/auth';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, BookOpen, ShieldCheck } from 'lucide-react';
@@ -19,7 +19,7 @@ export const Login = () => {
     try {
       setLoading(true);
       setError('');
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const { data } = await axios.post('/api/auth/login', { email, password });
       login({ ...data, token: data.token });
       navigate('/dashboard');
     } catch (err: any) {
@@ -51,7 +51,7 @@ export const Login = () => {
         </div>
 
         <div className="bg-card border border-border p-10 rounded-[3rem] shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-primary to-transparent"></div>
           
           {error && (
             <div className="bg-destructive/10 text-destructive border border-destructive/20 p-4 rounded-2xl mb-6 text-sm font-bold flex items-center gap-2">

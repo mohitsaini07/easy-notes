@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api/axios';
 import { useAuthStore } from '../store/auth';
 import { motion } from 'framer-motion';
 import { Mail, Lock, User, ArrowRight, BookOpen, ShieldCheck } from 'lucide-react';
@@ -20,7 +20,7 @@ export const Register = () => {
     try {
       setLoading(true);
       setError('');
-      const { data } = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+      const { data } = await axios.post('/api/auth/register', { name, email, password });
       login({ ...data, token: data.token });
       navigate('/dashboard');
     } catch (err: any) {
