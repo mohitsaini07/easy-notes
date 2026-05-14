@@ -1,6 +1,6 @@
 # EasyNotes - Online Notes Sharing Web App
 
-A modern, production-ready full-stack web application designed for students and educators to share study materials, notes, PDFs, assignments, and resources.
+A modern, production-ready full-stack web application designed for students to share study materials, notes, PDFs, assignments, and resources.
 
 ## 🚀 Features
 
