@@ -150,9 +150,30 @@ export const updateDownloadCount = async (req: Request, res: Response) => {
       note.downloads = (note.downloads || 0) + 1;
       await note.save();
       res.json({ downloads: note.downloads });
-    } else {
-      res.status(404).json({ message: 'Note not found' });
     }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Delete a note
+// @route   DELETE /api/notes/:id
+// @access  Private
+export const deleteNote = async (req: Request | any, res: Response) => {
+  try {
+    const note = await Note.findById(req.params.id);
+
+    if (!note) {
+      return res.status(404).json({ message: 'Note not found' });
+    }
+
+    // Check if the user is the uploader
+    if (note.uploader.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: 'Not authorized to delete this note' });
+    }
+
+    await note.deleteOne();
+    res.json({ message: 'Note removed' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

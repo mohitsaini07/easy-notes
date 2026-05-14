@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FileText, Eye, Star, Download, Upload, Plus, ChevronRight, Search, Users } from 'lucide-react';
+import { FileText, Eye, Star, Download, Upload, Plus, ChevronRight, Search, Users, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -59,6 +59,22 @@ export const Dashboard = () => {
       setStats(data);
     } catch (error) {
       console.error('Download failed:', error);
+    }
+  };
+
+  const handleDelete = async (e: React.MouseEvent, noteId: string) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this note?')) {
+      try {
+        await axios.delete(`/api/notes/${noteId}`);
+        setStats(prev => ({
+          ...prev,
+          notes: prev.notes.filter((n: any) => n._id !== noteId),
+          totalNotes: (prev.totalNotes || 1) - 1
+        }));
+      } catch (error) {
+        console.error('Delete failed:', error);
+      }
     }
   };
 
@@ -192,15 +208,25 @@ export const Dashboard = () => {
                             </span>
                             <span className="text-[10px] font-bold uppercase">Views</span>
                           </div>
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDownload(note);
-                            }}
-                            className="h-12 w-12 bg-secondary rounded-xl flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 active:scale-90"
-                          >
-                            <Download className="h-5 w-5" />
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <button 
+                              onClick={(e) => handleDownload(note)}
+                              className="p-3 bg-secondary rounded-xl text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all opacity-0 group-hover:opacity-100"
+                              title="Download"
+                            >
+                              <Download className="h-4 w-4" />
+                            </button>
+                            <button 
+                              onClick={(e) => handleDelete(e, note._id)}
+                              className="p-3 bg-destructive/10 rounded-xl text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all opacity-0 group-hover:opacity-100"
+                              title="Delete"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                            <div className="p-3 bg-secondary rounded-xl text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                              <ChevronRight className="h-4 w-4" />
+                            </div>
+                          </div>
                         </div>
                       </motion.div>
                     ))
