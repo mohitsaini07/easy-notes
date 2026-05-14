@@ -67,11 +67,14 @@ export const Dashboard = () => {
     if (window.confirm('Are you sure you want to delete this note?')) {
       try {
         await axios.delete(`/api/notes/${noteId}`);
-        setStats(prev => ({
-          ...prev,
-          notes: prev.notes.filter((n: any) => n._id !== noteId),
-          totalNotes: (prev.totalNotes || 1) - 1
-        }));
+        setStats(prev => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            recentNotes: prev.recentNotes.filter((n: any) => n._id !== noteId),
+            totalUploads: (prev.totalUploads || 1) - 1
+          };
+        });
       } catch (error) {
         console.error('Delete failed:', error);
       }
