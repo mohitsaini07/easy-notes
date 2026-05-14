@@ -213,7 +213,7 @@ export const Dashboard = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             <button 
-                              onClick={(e) => handleDownload(note)}
+                              onClick={(e) => { e.stopPropagation(); handleDownload(note); }}
                               className="p-3 bg-secondary rounded-xl text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all opacity-0 group-hover:opacity-100"
                               title="Download"
                             >
