@@ -13,16 +13,20 @@ dotenv.config();
 
 const app = express();
 
+// Middleware
+app.use(cors({
+  origin: '*', // Temporarily allow all origins to troubleshoot
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Connect to database
 connectDB();
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-  origin: ['https://easynotes-alpha.vercel.app', 'http://localhost:5173'],
-  credentials: true
-}));
 app.use(morgan('dev'));
 app.use(helmet({
   crossOriginResourcePolicy: false,
