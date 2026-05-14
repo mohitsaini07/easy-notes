@@ -19,7 +19,10 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: ['https://easynotes-alpha.vercel.app', 'http://localhost:5173'],
+  credentials: true
+}));
 app.use(morgan('dev'));
 app.use(helmet({
   crossOriginResourcePolicy: false,
