@@ -9,7 +9,6 @@ import { PreviewModal } from '../components/PreviewModal';
 interface Stats {
   totalUploads: number;
   totalDownloads: number;
-  totalLikes: number;
   totalViews: number;
   recentNotes: any[];
 }
@@ -141,7 +140,6 @@ export const Dashboard = () => {
               {[
                 { label: 'Uploads', value: stats?.totalUploads || 0, icon: <FileText />, color: 'text-blue-500', bg: 'bg-blue-500/10' },
                 { label: 'Downloads', value: stats?.totalDownloads || 0, icon: <Download />, color: 'text-green-500', bg: 'bg-green-500/10' },
-                { label: 'Likes', value: stats?.totalLikes || 0, icon: <Star />, color: 'text-yellow-500', bg: 'bg-yellow-500/10' },
                 { label: 'Total Views', value: stats?.totalViews || 0, icon: <Eye />, color: 'text-purple-500', bg: 'bg-purple-500/10' },
               ].map((stat, i) => (
                 <motion.div 
@@ -260,11 +258,8 @@ export const Dashboard = () => {
                    {user?.name.charAt(0).toUpperCase()}
                  </div>
                  <h2 className="text-2xl font-black mb-1">{user?.name}</h2>
-                 <p className="text-primary-foreground/70 font-medium mb-6">{user?.email}</p>
-                 <div className="flex gap-2">
-                   <span className="bg-white/10 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-white/10">{user?.role}</span>
-                   <span className="bg-white/10 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-white/10">Level 12</span>
-                 </div>
+                 <p className="text-primary-foreground/70 font-medium mb-6">{user?.email}</p>            
+                 <span className="bg-white/10 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-white/10">{user?.role}</span>
                </div>
             </div>
 

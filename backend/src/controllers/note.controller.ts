@@ -121,7 +121,6 @@ export const getUserStats = async (req: Request | any, res: Response) => {
     const userNotes = await Note.find({ uploader: req.user._id });
     
     const totalDownloads = userNotes.reduce((acc, note) => acc + (note.downloads || 0), 0);
-    const totalLikes = userNotes.reduce((acc, note) => acc + (note.likes || 0), 0);
     const totalViews = userNotes.reduce((acc, note) => acc + (note.views || 0), 0);
     
     const recentNotes = await Note.find({ uploader: req.user._id })
@@ -131,7 +130,6 @@ export const getUserStats = async (req: Request | any, res: Response) => {
     res.json({
       totalUploads,
       totalDownloads,
-      totalLikes,
       totalViews,
       recentNotes
     });
